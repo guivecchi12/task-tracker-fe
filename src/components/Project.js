@@ -1,43 +1,54 @@
 import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
-import { fetchProject } from '../actions/projectActions';
+import { fetchProjects } from '../actions/projectActions';
+import { fetchTasks } from '../actions/taskActions';
 const Project = props => {
     const [projects, setProjects] = useState([])
-    
-    useEffect(()=>{
-        props.fetchProject()
-        setProjects(props.project)
-    },[])
+    const [tasks, setTasks] = useState([])
 
-    // console.log("Projects", projects)
+    useEffect(()=>{
+        props.fetchProjects()
+        props.fetchTasks()
+        setProjects(props.projects)
+        setTasks(props.tasks)
+        console.log("PROPS: ", props)
+    },[props])
+
+    // console.log("Projects: ", projects)
+    // console.log("Tasks: ", props.tasks)
+
     return(
         <div>
-            {projects.length > 0 ?
-                projects.map(proj => (
-                    <div key = {proj.id}>
-                        <h5>
-                            Project ID: {proj.id}
-                        </h5>
-                        <h3>
-                            Project name: {proj.name}
-                        </h3>
-                        <h5>
-                            User ID: {proj.user_id}
-                        </h5>
-                    </div>
-                ))
+            {/* {projects.length > 0 ? "Found Projects"
+                // projects.map(proj => (
+                //     <div key = {proj.id}>
+                //         <h1>
+                //             Project Name: {proj.project}
+                //         </h1>
+                //         <h3>
+                //             Task Name: {proj.taskName}
+                //         </h3>
+                //         <h5>
+                //             Task Description: {proj.taskDescription}
+                //         </h5>
+                //     </div>
+                // ))
                 : "No Projects"
-            }
+            } */}
+            HI
         </div>
     )
 }
 
 const mapStateToProps = state => {
+    console.log("state", state)
     return{
-        project: state.project.projects
+        projects: state.project,
+        tasks: state.tasks
     }
 }
 
-export default connect(mapStateToProps, { fetchProject })(
-    Project
-);
+export default connect(mapStateToProps, { 
+    fetchProjects,
+    fetchTasks
+})(Project);
