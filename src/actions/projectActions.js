@@ -8,7 +8,7 @@ export const fetchProjects = () => dispatch => {
             console.log("PROJECT PAYLOAD: ", res.data)
             dispatch({
                 type: FETCH_PROJECTS,
-                payload: res.data
+                payload: res.data.projects
             })
         })
         .catch(err => console.log(err));

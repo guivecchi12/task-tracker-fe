@@ -8,7 +8,7 @@ export default function projectReducer(state = initialState, action){
             console.log("PROJECT REDUCER STATE: ", state)
             return{
                 ...state,
-                projects: [...state.projects, action.payload]
+                projects: action.payload
             };
         case NEW_PROJECT:
             return{

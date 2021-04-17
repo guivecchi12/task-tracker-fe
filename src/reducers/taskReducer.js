@@ -7,7 +7,7 @@ export default function taskReducer(state = [], action){
             console.log("TASKS REDUCER STATE: ", state)
             return{
                 ...state,
-                tasks: [...state.tasks, action.payload]
+                tasks: action.payload
             }
         default:
             return state;

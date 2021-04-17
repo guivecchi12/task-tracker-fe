@@ -1,50 +1,31 @@
-import React, {useState, useEffect} from 'react';
+import { render } from '@testing-library/react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchProjects } from '../actions/projectActions';
 import { fetchTasks } from '../actions/taskActions';
-const Project = props => {
-    const [projects, setProjects] = useState([])
-    const [tasks, setTasks] = useState([])
 
-    useEffect(()=>{
-        props.fetchProjects()
-        props.fetchTasks()
-        setProjects(props.projects)
-        setTasks(props.tasks)
-        console.log("PROPS: ", props)
-    },[props])
-
-    // console.log("Projects: ", projects)
-    // console.log("Tasks: ", props.tasks)
-
-    return(
-        <div>
-            {/* {projects.length > 0 ? "Found Projects"
-                // projects.map(proj => (
-                //     <div key = {proj.id}>
-                //         <h1>
-                //             Project Name: {proj.project}
-                //         </h1>
-                //         <h3>
-                //             Task Name: {proj.taskName}
-                //         </h3>
-                //         <h5>
-                //             Task Description: {proj.taskDescription}
-                //         </h5>
-                //     </div>
-                // ))
-                : "No Projects"
-            } */}
-            HI
-        </div>
-    )
+class Project extends Component {
+    componentDidMount(){
+        this.props.fetchProjects()
+        this.props.fetchTasks()
+    }
+    render(){
+        console.log("Projects: ", this.props.projects)
+        console.log("Tasks: ", this.props.tasks)
+        
+        return(
+            <div>
+                HI
+            </div>
+        )
+    }
 }
 
 const mapStateToProps = state => {
     console.log("state", state)
-    return{
-        projects: state.project,
-        tasks: state.tasks
+    return {
+        projects: state.projects.projects,
+        tasks: state.tasks.tasks
     }
 }
 
