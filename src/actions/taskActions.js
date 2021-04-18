@@ -5,7 +5,7 @@ export const fetchTasks = () => dispatch => {
     axios
         .get(`${process.env.REACT_APP_API_URL}/task`)
         .then(res => {
-            console.log("TASK PAYLOAD: ", res.data)
+            // console.log("TASK PAYLOAD: ", res.data)
             dispatch({
                 type: FETCH_TASKS,
                 payload: res.data

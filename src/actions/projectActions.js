@@ -5,7 +5,7 @@ export const fetchProjects = () => dispatch => {
     axios
         .get(`${process.env.REACT_APP_API_URL}/project`)
         .then(res => {
-            console.log("PROJECT PAYLOAD: ", res.data)
+            // console.log("PROJECT PAYLOAD: ", res.data)
             dispatch({
                 type: FETCH_PROJECTS,
                 payload: res.data.projects
