@@ -10,11 +10,6 @@ export default function projectReducer(state = initialState, action){
                 ...state,
                 projects: action.payload
             };
-        case NEW_PROJECT:
-            return{
-                ...state,
-                projects: action.payload
-            }
         default:
             return state;
     }

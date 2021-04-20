@@ -1,4 +1,4 @@
-import {FETCH_PROJECTS, NEW_PROJECT} from './types';
+import {FETCH_PROJECTS, FETCH_PROJECTS_AND_TASKS, NEW_PROJECT} from './types';
 import axios from 'axios';
 
 export const fetchProjects = () => dispatch => {

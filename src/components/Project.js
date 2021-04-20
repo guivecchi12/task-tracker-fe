@@ -1,61 +1,75 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Row, Col, Divider } from 'antd';
+
 import { fetchProjects } from '../actions/projectActions';
 import { fetchTasks } from '../actions/taskActions';
 
+
 class Project extends Component {
-    componentDidMount(){
-        this.props.fetchProjects()
+    constructor(props){
+        super(props);
+        this.state = {projects:this.props.projects, tasks: this.props.tasks};
         this.props.fetchTasks()
+        this.props.fetchProjects()
+        this.displayProject()
     }
-    addTasksToProject(projects, tasks){
-        var projWithTasks = []
-        var addTasks = []
-        var i, j;
-        if(projects && tasks){
-            for(i=0; i<projects.length; i++){
-                for(j=0; j<tasks.length; j++){
-                    if(tasks[j].proj_id === projects[i].id){
-                        addTasks.push(tasks[j])
+
+
+    displayProject = () => {
+        var fullProject = {}
+        if(this.state.tasks && this.state.projects){
+            this.state.projects.forEach(project=>{
+                fullProject[project.id] = {title: project.name, tasks:[]}
+                this.state.tasks.forEach(task => {
+                    if(task.proj_id === project.id){
+                        fullProject[project.id].tasks.push(task)
                     }
-                }
-                addTasks.unshift(projects[i])
-                projWithTasks.push(addTasks)
-                addTasks = []
-            }
+                })
+            })
         }
-        return projWithTasks;
+        // Object.entries(fullProject).forEach(([key, project]) => {
+        //     console.log(project.title)
+        //     project.tasks.forEach(task => {
+        //         console.log(task)
+        //     })
+
+        // })
+        return(
+            <div className = "projectComponent">
+                {this.state.projects ?
+                    Object.entries(fullProject).map(([key, project]) => {
+                        return(
+                            <Row gutter={16} key={key}>
+                                <Col className="projectTitle">
+                                    <div>{project.title}</div>
+                                </Col>
+                                {project.tasks.map(task => {
+                                    return(
+                                        <div>
+                                            <Col className="taskName">
+                                                <div>{task.name}</div>
+                                            </Col>
+                                            <Col className="taskName">
+                                                <div>{task.description}</div>
+                                            </Col>
+                                        </div>
+                                    )
+                                })}
+                            </Row>
+                        )
+                    })
+                    : <div> No project found</div>}
+            </div>
+        )
     }
+
+
     
     render(){
-        // console.log("Projects: ", this.props.projects)
-        // console.log("Tasks: ", this.props.tasks)
-        const projects = this.addTasksToProject(this.props.projects, this.props.tasks)
-        // console.log("Projects in render: ", projects)
         return(
             <div>
-                {projects[0].map(proj => {
-                    return(
-                        <div>
-                            {proj.description ? 
-                                <div>
-                                    <h3>
-                                        Task: {proj.name}
-                                    </h3>
-                                    <h4>
-                                        Description: {proj.description}
-                                    </h4>
-                                </div>
-                            :
-                                <div>
-                                    <h1>
-                                        Project: {proj.name}
-                                    </h1>
-                                </div>    
-                        }
-                        </div>
-                    )
-                })}
+                {this.displayProject()}
             </div>
         )
     }
