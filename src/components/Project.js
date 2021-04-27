@@ -70,15 +70,13 @@ class Project extends Component {
             newTask: {
                 ...this.state.newTask,
                 [event.target.name]: event.target.value,
-                proj_id: this.state.currentProject
+                proj_id: this.state.currentProject.id
             }
         })
-        // console.log(this.state.newTask)
     }
 
     handleProjectSubmit(event){
         event.preventDefault()
-        console.log(this.state.newProject)
         this.props.addProject(this.state.newProject)
         this.setState({
             newProject: {
