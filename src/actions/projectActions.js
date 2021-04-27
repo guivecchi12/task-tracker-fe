@@ -30,6 +30,7 @@ export const deleteProject = (id) => dispatch => {
     axios
         .delete(`${process.env.REACT_APP_API_URL}/project/${id}`)
         .then(res => {
+            console.log(res)
             dispatch({
                 type: REMOVE_PROJECT,
                 payload: res.data

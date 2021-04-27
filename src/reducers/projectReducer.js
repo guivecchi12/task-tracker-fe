@@ -14,9 +14,7 @@ export default function projectReducer(state = initialState, action){
                 projects: action.payload
             }
         case REMOVE_PROJECT:
-            const newProjects = this.state.projects.filter(proj => proj.id === action.payload.remove.id)
-            console.log("before: ", this.state.projects)
-            console.log("after: ", newProjects)
+            const newProjects = state.projects.filter(proj => proj.id !== action.payload.removed.id)
             return{
                 ...state,
                 projects: newProjects

@@ -43,7 +43,6 @@ class Project extends Component {
     }
 
     componentDidUpdate(prevProps){
-        console.log(this.props, prevProps)
         if(this.props.projects !== prevProps.projects || this.props.tasks !== prevProps.tasks){
             this.setState({
                 projects:this.props.projects,
