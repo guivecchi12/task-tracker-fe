@@ -13,3 +13,16 @@ export const fetchTasks = () => dispatch => {
         })
         .catch(err => console.log(err));
 }
+
+export const addTask = (task) => dispatch => {
+    axios
+        .post(`${process.env.REACT_APP_API_URL}/task`, task)
+        .then(res => {
+            // console.log("addTask Action: ", res)
+            dispatch({
+                type: NEW_TASK,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err))
+}

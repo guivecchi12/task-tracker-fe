@@ -1,4 +1,4 @@
-import {FETCH_PROJECTS, FETCH_PROJECTS_AND_TASKS, NEW_PROJECT} from './types';
+import {FETCH_PROJECTS, NEW_PROJECT} from './types';
 import axios from 'axios';
 
 export const fetchProjects = () => dispatch => {
@@ -8,8 +8,20 @@ export const fetchProjects = () => dispatch => {
             // console.log("PROJECT PAYLOAD: ", res.data)
             dispatch({
                 type: FETCH_PROJECTS,
-                payload: res.data.projects
+                payload: res.data
             })
         })
         .catch(err => console.log(err));
+}
+
+export const addProject = (project) => dispatch => {
+    axios
+        .post(`${process.env.REACT_APP_API_URL}/project`, project)
+        .then(res => {
+            dispatch({
+                type: NEW_PROJECT,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err))
 }

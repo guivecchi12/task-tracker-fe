@@ -1,9 +1,64 @@
 .App {
   text-align: center;
 }
+.project{
+  margin-top: 0;
+}
 
 .projectComponent{
-  background-color: azure;
-  width: 80%;
-  margin-left: 8%;
+  display:flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  text-transform: capitalize;
+}
+
+.projectRow{
+  border: solid lavender;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.projectTitle{
+  font-weight: 900;
+  font-size: 1.5em;
+}
+
+.tasks{
+  margin-top:10px;
+  padding-top: 5px;
+  border-top: solid blanchedalmond 2px;
+}
+
+.taskName{
+  font-style: italic;
+  font-weight: 500;
+}
+
+.taskDescription{
+
+}
+
+.addButton{
+  margin-top: 10px;
+  background-color: #03a9f4;
+  border-radius: 25px;
+  color: whitesmoke;
+  font-weight: 500;
+  padding: 6px;
+}
+
+.taskForm{
+  border: solid black 5px;
+  width: 50%;
+  margin: 10px;
+  margin-left: 24%;
+  padding: 5px;
+}
+
+label{
+  margin: 5px;
+}
+
+.form{
+  margin: 5px;
 }

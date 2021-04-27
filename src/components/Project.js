@@ -1,26 +1,99 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Divider } from 'antd';
+import { Row, Col, Button } from 'antd';
 
-import { fetchProjects } from '../actions/projectActions';
-import { fetchTasks } from '../actions/taskActions';
+import { fetchProjects, addProject } from '../actions/projectActions';
+import { fetchTasks, addTask } from '../actions/taskActions';
 
 
 class Project extends Component {
     constructor(props){
         super(props);
-        this.state = {projects:this.props.projects, tasks: this.props.tasks};
-        this.props.fetchTasks()
-        this.props.fetchProjects()
-        this.displayProject()
+        this.state = {
+            projects:this.props.projects,
+            tasks: this.props.tasks,
+            newProject: {
+                name: '',
+                dep_id: 2
+            },
+            newTask: {
+                name: '',
+                description: '',
+                proj_id: 0
+            },
+            currentProject: {
+                id: 0,
+                name: ''
+            },
+            taskForm: false,
+            projectForm: false
+        };
+        this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
+        this.handleTaskChange = this.handleTaskChange.bind(this);
+        this.handleProjectSubmit = this.handleProjectSubmit.bind(this);
+        this.displayProject = this.displayProject.bind(this);
     }
 
+    componentDidMount(){
+        this.setState({
+            projects:this.props.projects,
+            tasks: this.props.tasks
+        })
+        this.props.fetchTasks()
+        this.props.fetchProjects()
+    }
+
+    componentDidUpdate(prevProps){
+        if(this.props.projects !== prevProps.projects || this.props.tasks !== prevProps.tasks){
+            this.setState({
+                projects:this.props.projects,
+                tasks: this.props.tasks
+            })
+        }
+    }
+    
+    handleTaskSubmit(event){
+        event.preventDefault()
+        this.props.addTask(this.state.newTask)
+        this.setState({
+            newTask: {
+                name: '',
+                description: '',
+                proj_id: 0
+            },
+            taskForm: false
+        })
+    }
+
+    handleTaskChange(event){
+        this.setState({
+            newTask: {
+                ...this.state.newTask,
+                [event.target.name]: event.target.value,
+                proj_id: this.state.currentProject
+            }
+        })
+        // console.log(this.state.newTask)
+    }
+
+    handleProjectSubmit(event){
+        event.preventDefault()
+        console.log(this.state.newProject)
+        this.props.addProject(this.state.newProject)
+        this.setState({
+            newProject: {
+                name: '',
+                dep_id: 2
+            },
+            projectForm: false
+        })
+    }
 
     displayProject = () => {
         var fullProject = {}
         if(this.state.tasks && this.state.projects){
             this.state.projects.forEach(project=>{
-                fullProject[project.id] = {title: project.name, tasks:[]}
+                fullProject[project.id] = {id: project.id, title: project.name, tasks:[]}
                 this.state.tasks.forEach(task => {
                     if(task.proj_id === project.id){
                         fullProject[project.id].tasks.push(task)
@@ -28,34 +101,34 @@ class Project extends Component {
                 })
             })
         }
-        // Object.entries(fullProject).forEach(([key, project]) => {
-        //     console.log(project.title)
-        //     project.tasks.forEach(task => {
-        //         console.log(task)
-        //     })
-
-        // })
         return(
             <div className = "projectComponent">
                 {this.state.projects ?
                     Object.entries(fullProject).map(([key, project]) => {
                         return(
-                            <Row gutter={16} key={key}>
+                            <Row gutter={16} key={key} className="projectRow">
                                 <Col className="projectTitle">
                                     <div>{project.title}</div>
                                 </Col>
                                 {project.tasks.map(task => {
                                     return(
-                                        <div>
+                                        <div className="tasks">
                                             <Col className="taskName">
                                                 <div>{task.name}</div>
                                             </Col>
-                                            <Col className="taskName">
+                                            <Col className="taskDescription">
                                                 <div>{task.description}</div>
                                             </Col>
                                         </div>
                                     )
                                 })}
+                                <Button type="primary" className="addButton" onClick={()=>{this.setState({
+                                    currentProject:{
+                                        id: project.id,
+                                        name: project.title
+                                        },
+                                        taskForm: true
+                                        })}}>Add Task</Button>
                             </Row>
                         )
                     })
@@ -63,20 +136,47 @@ class Project extends Component {
             </div>
         )
     }
-
-
     
     render(){
         return(
-            <div>
+            <div className="project">
+                <Button type="primary" className="addButton" onClick={()=> this.setState({projectForm:true})}>
+                    Add New Project
+                </Button>
+                {this.state.projectForm ?
+                    <div>
+                       <form onSubmit={this.handleProjectSubmit}>
+                                <label>
+                                    <span className="form">Project Title: </span>
+                                    <input type="text" value={this.state.newProject.name} name="name" onChange={(e)=> this.setState({ newProject: { name: e.target.value }})} />
+                                </label>
+                                <input type="submit" value="Submit" className="addButton"/>
+                            </form> 
+                    </div> : null}
                 {this.displayProject()}
+                    {this.state.taskForm ?
+                        <div>
+                            Add task to {this.state.currentProject.name}
+                            <form onSubmit={this.handleTaskSubmit}>
+                                <label>
+                                    <span className="form">Task Title: </span>
+                                    <input type="text" value={this.state.newTask.name} name="name" onChange={this.handleTaskChange} />
+                                </label>
+                                <label>
+                                    <span className="form">Task Description:</span> 
+                                    <input type="text" value={this.state.newTask.description} name="description" onChange={this.handleTaskChange}/>
+                                </label>
+                                <input type="submit" value="Submit" className="addButton"/>
+                            </form>
+                        </div>
+                    : null}
+                
             </div>
         )
     }
 }
 
 const mapStateToProps = state => {
-    // console.log("state", state)
     return {
         projects: state.projects.projects,
         tasks: state.tasks.tasks
@@ -85,5 +185,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, { 
     fetchProjects,
-    fetchTasks
+    fetchTasks,
+    addTask,
+    addProject
 })(Project);
