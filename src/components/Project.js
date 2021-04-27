@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
-import { fetchProjects, addProject } from '../actions/projectActions';
+import { fetchProjects, addProject, deleteProject } from '../actions/projectActions';
 import { fetchTasks, addTask } from '../actions/taskActions';
-
 
 class Project extends Component {
     constructor(props){
@@ -13,8 +13,7 @@ class Project extends Component {
             projects:this.props.projects,
             tasks: this.props.tasks,
             newProject: {
-                name: '',
-                dep_id: 2
+                name: ''
             },
             newTask: {
                 name: '',
@@ -44,6 +43,7 @@ class Project extends Component {
     }
 
     componentDidUpdate(prevProps){
+        console.log(this.props, prevProps)
         if(this.props.projects !== prevProps.projects || this.props.tasks !== prevProps.tasks){
             this.setState({
                 projects:this.props.projects,
@@ -80,8 +80,7 @@ class Project extends Component {
         this.props.addProject(this.state.newProject)
         this.setState({
             newProject: {
-                name: '',
-                dep_id: 2
+                name: ''
             },
             projectForm: false
         })
@@ -105,6 +104,7 @@ class Project extends Component {
                     Object.entries(fullProject).map(([key, project]) => {
                         return(
                             <Row gutter={16} key={key} className="projectRow">
+                                <DeleteOutlined onClick={()=> this.props.deleteProject(project.id)} className="deleteButton"/>
                                 <Col className="projectTitle">
                                     <div>{project.title}</div>
                                 </Col>
@@ -184,6 +184,7 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, { 
     fetchProjects,
     fetchTasks,
+    addProject,
     addTask,
-    addProject
+    deleteProject
 })(Project);

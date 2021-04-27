@@ -1,4 +1,4 @@
-import {FETCH_PROJECTS, NEW_PROJECT} from './types';
+import {FETCH_PROJECTS, NEW_PROJECT, REMOVE_PROJECT} from './types';
 import axios from 'axios';
 
 export const fetchProjects = () => dispatch => {
@@ -20,6 +20,18 @@ export const addProject = (project) => dispatch => {
         .then(res => {
             dispatch({
                 type: NEW_PROJECT,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+export const deleteProject = (id) => dispatch => {
+    axios
+        .delete(`${process.env.REACT_APP_API_URL}/project/${id}`)
+        .then(res => {
+            dispatch({
+                type: REMOVE_PROJECT,
                 payload: res.data
             })
         })
