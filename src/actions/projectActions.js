@@ -27,6 +27,7 @@ export const addProject = (project) => dispatch => {
 }
 
 export const editProject = (id, projectTitle) => dispatch => {
+    console.log(id, projectTitle)
     axios
         .put(`${process.env.REACT_APP_API_URL}/project/${id}`, projectTitle)
         .then(res => {

@@ -100,10 +100,11 @@ class Project extends Component {
         })
         this.setState({
             projects: [...updatedProjects],
-            editTitle: {edit: false}
+            editTitle: {edit: false},
+            newProject: {name : ''}
         })
         let id = this.state.editTitle.id
-        let value = this.state.newProject.name
+        let value = {name : this.state.newProject.name}
         this.props.editProject(id, value)
     }
 
