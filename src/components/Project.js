@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Button } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
-import { fetchProjects, addProject, deleteProject } from '../actions/projectActions';
+import { fetchProjects, addProject, deleteProject, editProject } from '../actions/projectActions';
 import { fetchTasks, addTask } from '../actions/taskActions';
 
 class Project extends Component {
@@ -25,12 +25,17 @@ class Project extends Component {
                 name: ''
             },
             taskForm: false,
-            projectForm: false
+            projectForm: false,
+            editTitle: {
+                edit: false,
+                id: null
+            }
         };
         this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
         this.handleTaskChange = this.handleTaskChange.bind(this);
         this.handleProjectSubmit = this.handleProjectSubmit.bind(this);
         this.displayProject = this.displayProject.bind(this);
+        this.editProjectTitle = this.editProjectTitle.bind(this);
     }
 
     componentDidMount(){
@@ -85,6 +90,23 @@ class Project extends Component {
         })
     }
 
+    editProjectTitle(event){
+        event.preventDefault()
+        let updatedProjects = [...this.state.projects]
+        updatedProjects.forEach(proj => {
+            if(proj.id === this.state.editTitle.id){
+                proj.name = this.state.newProject.name
+            }
+        })
+        this.setState({
+            projects: [...updatedProjects],
+            editTitle: {edit: false}
+        })
+        let id = this.state.editTitle.id
+        let value = this.state.newProject.name
+        this.props.editProject(id, value)
+    }
+
     displayProject = () => {
         var fullProject = {}
         if(this.state.tasks && this.state.projects){
@@ -106,6 +128,14 @@ class Project extends Component {
                                 <DeleteOutlined onClick={()=> this.props.deleteProject(project.id)} className="deleteButton"/>
                                 <Col className="projectTitle">
                                     <div>{project.title}</div>
+                                    <EditOutlined onClick={()=>{
+                                        this.setState({
+                                            editTitle: {
+                                                edit: !this.state.editTitle.edit,
+                                                id: project.id
+                                            }
+                                        })
+                                    }} className="editButton"/>
                                 </Col>
                                 {project.tasks.map(task => {
                                     return(
@@ -167,7 +197,16 @@ class Project extends Component {
                             </form>
                         </div>
                     : null}
-                
+                {this.state.editTitle.edit ? 
+                    <div>
+                        <form onSubmit={this.editProjectTitle}>
+                            <label>
+                                <span className="form"> New Title: </span>
+                                <input type="text" value={this.state.newProject.name} name="name" onChange={(e)=> this.setState({ newProject: { name: e.target.value }})} />
+                                <input type="submit" value="Submit" className="addButton"/>
+                            </label>
+                        </form>
+                    </div> : null}
             </div>
         )
     }
@@ -182,8 +221,9 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, { 
     fetchProjects,
-    fetchTasks,
     addProject,
-    addTask,
-    deleteProject
+    editProject,
+    deleteProject,
+    fetchTasks,
+    addTask
 })(Project);

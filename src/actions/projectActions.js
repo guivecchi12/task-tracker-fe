@@ -1,4 +1,4 @@
-import {FETCH_PROJECTS, NEW_PROJECT, REMOVE_PROJECT} from './types';
+import {FETCH_PROJECTS, NEW_PROJECT, EDIT_PROJECT, REMOVE_PROJECT} from './types';
 import axios from 'axios';
 
 export const fetchProjects = () => dispatch => {
@@ -26,11 +26,22 @@ export const addProject = (project) => dispatch => {
         .catch(err => console.log(err))
 }
 
+export const editProject = (id, projectTitle) => dispatch => {
+    axios
+        .put(`${process.env.REACT_APP_API_URL}/project/${id}`, projectTitle)
+        .then(res => {
+            dispatch({
+                type: EDIT_PROJECT,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err))
+}
+
 export const deleteProject = (id) => dispatch => {
     axios
         .delete(`${process.env.REACT_APP_API_URL}/project/${id}`)
         .then(res => {
-            console.log(res)
             dispatch({
                 type: REMOVE_PROJECT,
                 payload: res.data
